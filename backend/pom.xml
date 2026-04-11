@@ -87,7 +87,11 @@
     		<artifactId>pdfbox</artifactId>
     		<version>3.0.1</version>
 		</dependency>
-	</dependencies>
+		<dependency>
+    		<groupId>com.fasterxml.jackson.core</groupId>
+    		<artifactId>jackson-databind</artifactId>
+		</dependency>
+		</dependencies>
 
 	<build>
 		<plugins>
