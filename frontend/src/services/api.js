@@ -19,6 +19,7 @@ export const uploadResume = (formData) => api.post('/resume/upload', formData, {
 });
 export const analyzeResume = (data) => api.post('/resume/analyze', data);
 export const getResults = (resumeId) => api.get(`/resume/results/${resumeId}`);
+export const getResultById = (id) => api.get(`/resume/result/${id}`);
 
 // Job Role APIs
 export const getJobRoles = () => api.get('/jobs/roles');
