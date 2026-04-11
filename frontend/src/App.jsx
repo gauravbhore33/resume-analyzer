@@ -1,11 +1,26 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import UploadPage from './pages/UploadPage';
+import ResultsPage from './pages/ResultsPage';
+import HistoryPage from './pages/HistoryPage';
+
 function App() {
-  return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-600">
-        Resume Analyzer 🎯
-      </h1>
-    </div>
-  )
+    return (
+        <Router>
+            <Navbar />
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/upload" element={<UploadPage />} />
+                <Route path="/results/:id" element={<ResultsPage />} />
+                <Route path="/history" element={<HistoryPage />} />
+            </Routes>
+        </Router>
+    );
 }
 
-export default App
+export default App;
