@@ -23,5 +23,5 @@ export const getResultById = (id) => api.get(`/resume/result/${id}`);
 
 // Job Role APIs
 export const getJobRoles = () => api.get('/jobs/roles');
-
+export const getResumesByUser = (userId) => api.get(`/resume/user/${userId}`);
 export default api;
