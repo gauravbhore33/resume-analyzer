@@ -65,4 +65,8 @@ public class AnalysisService {
         return analysisResultRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Analysis result not found"));
     }
+
+    public List<AnalysisResult> getLeaderboardByJobRole(Long jobRoleId) {
+        return analysisResultRepository.findByJobRoleId(jobRoleId);
+    }
 }

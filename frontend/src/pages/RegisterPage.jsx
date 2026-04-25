@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/api';
+import toast from 'react-hot-toast';
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -22,11 +23,16 @@ function RegisterPage() {
             const response = await registerUser(formData);
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
+                localStorage.setItem('userId', response.data.userId);
+                localStorage.setItem('role', response.data.role);
+                toast.success('Account created successfully! 🎉');
                 navigate('/upload');
             } else {
+                toast.error(response.data.error || 'Registration failed!');
                 setError(response.data.error || 'Registration failed!');
             }
         } catch (err) {
+            toast.error('Something went wrong. Please try again.');
             setError('Something went wrong. Please try again.');
         }
         setLoading(false);

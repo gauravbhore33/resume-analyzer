@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/api';
+import toast from 'react-hot-toast';
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -22,12 +23,20 @@ function LoginPage() {
             const response = await loginUser(formData);
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
-                localStorage.setItem('userId', response.data.userId || '1');
-                navigate('/upload');
+                localStorage.setItem('userId', response.data.userId);
+                localStorage.setItem('role', response.data.role);
+                toast.success('Login successful! Welcome back 😊');
+                if (response.data.role === 'HR') {
+                    navigate('/hr/dashboard');
+                } else {
+                    navigate('/upload');
+                }
             } else {
+                toast.error(response.data.error || 'Login failed!');
                 setError(response.data.error || 'Login failed!');
             }
         } catch (err) {
+            toast.error('Invalid email or password. Please try again.');
             setError('Invalid email or password. Please try again.');
         }
         setLoading(false);

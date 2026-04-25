@@ -47,15 +47,20 @@ function HistoryPage() {
     };
 
     if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-blue-50">
-                <div className="text-center">
-                    <div className="text-6xl mb-4">📋</div>
-                    <p className="text-xl text-blue-600 font-medium">Loading history...</p>
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-blue-50">
+            <div className="text-center">
+                <div className="text-6xl mb-4 animate-bounce">📋</div>
+                <p className="text-xl text-blue-600 font-medium">Loading history...</p>
+                <div className="flex justify-center gap-2 mt-4">
+                    <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce"></div>
+                    <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce delay-100"></div>
+                    <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce delay-200"></div>
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
+}
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-10 px-4">

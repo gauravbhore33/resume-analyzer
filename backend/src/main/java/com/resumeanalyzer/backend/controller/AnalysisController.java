@@ -46,4 +46,9 @@ public class AnalysisController {
     public ResponseEntity<AnalysisResult> getResultById(@PathVariable Long id) {
         return ResponseEntity.ok(analysisService.getResultById(id));
     }
+
+    @GetMapping("/leaderboard/{jobRoleId}")
+    public ResponseEntity<List<AnalysisResult>> getLeaderboard(@PathVariable Long jobRoleId) {
+        return ResponseEntity.ok(analysisService.getLeaderboardByJobRole(jobRoleId));
+    }
 }

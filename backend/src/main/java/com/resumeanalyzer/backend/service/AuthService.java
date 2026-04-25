@@ -26,14 +26,14 @@ public class AuthService {
     public Map<String, String> register(String name, String email, String password) {
         Map<String, String> response = new HashMap<>();
 
-        if (userRepository.existsByEmail(email)) {
+        if (userRepository.findByEmailIgnoreCase(email).isPresent()) {
             response.put("error", "Email already exists!");
             return response;
         }
 
         User user = new User();
         user.setName(name);
-        user.setEmail(email);
+        user.setEmail(email.trim().toLowerCase());
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(User.Role.USER);
         userRepository.save(user);
@@ -47,8 +47,13 @@ public class AuthService {
     public Map<String, String> login(String email, String password) {
         Map<String, String> response = new HashMap<>();
 
-        User user = userRepository.findByEmail(email)
-                .orElse(null);
+        User user = userRepository.findByEmail(email.trim())
+        .orElse(null);
+
+        if (user == null) {
+            user = userRepository.findByEmailIgnoreCase(email.trim())
+            .orElse(null);
+        }
 
         if (user == null) {
             response.put("error", "User not found!");
@@ -64,6 +69,7 @@ public class AuthService {
         response.put("token", token);
         response.put("message", "Login successful!");
         response.put("role", user.getRole().toString());
+        response.put("userId", user.getId().toString());
         return response;
     }
 }

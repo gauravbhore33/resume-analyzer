@@ -1,0 +1,55 @@
+Website Link - http://localhost:5173/
+
+Start Backend
+Restart Spring Boot
+Make sure you are in backend folder:
+cd C:\Users\Gaurav\Desktop\resume-analyzer-project\resume-analyzer\backend
+.\mvnw clean spring-boot:run
+Then run:
+.\mvnw spring-boot:run
+
+
+
+Start Frontend
+Open a new terminal in VS Code by clicking "+" in terminal panel
+Then run:
+cd C:\Users\Gaurav\Desktop\resume-analyzer-project\resume-analyzer\frontend
+Then:
+npm run dev
+
+
+Step 3 — Test Login in Browser
+Go to http://localhost:5173/login:
+
+Email → hr@company.com
+Password → 123456
+
+
+
+resume_analyzer database
+├── users          ✅ Storing user accounts
+├── resumes        ✅ Storing uploaded resumes
+├── job_roles      ✅ Storing job roles & skills
+└── analysis_results ✅ Storing AI analysis data
+
+
+
+
+Run These Queries One by One
+Click on a new empty line in the editor and run each query separately by selecting it and pressing Ctrl + Enter
+
+Query 1 — Show Tables
+sqlUSE resume_analyzer;
+SHOW TABLES;
+
+Query 2 — Check Users
+sqlSELECT id, name, email, role FROM users;
+
+Query 3 — Check Resumes
+sqlSELECT id, user_id, file_path, uploaded_at FROM resumes;
+
+Query 4 — Check Job Roles
+sqlSELECT id, title, required_skills FROM job_roles;
+
+Query 5 — Check Analysis Results
+sqlSELECT id, resume_id, job_role_id, ats_score, matched_skills, missing_skills FROM analysis_results;

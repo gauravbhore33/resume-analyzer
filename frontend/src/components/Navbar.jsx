@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 function Navbar() {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
 
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
+        localStorage.removeItem('role');
         navigate('/');
     };
 
@@ -26,6 +28,17 @@ function Navbar() {
                             className="bg-blue-800 px-4 py-2 rounded-lg font-medium hover:bg-blue-700">
                             Register
                         </Link>
+                    </>
+                ) : role === 'HR' ? (
+                    <>
+                        <Link to="/hr/dashboard"
+                            className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-50">
+                            HR Dashboard
+                        </Link>
+                        <button onClick={handleLogout}
+                            className="bg-red-500 px-4 py-2 rounded-lg font-medium hover:bg-red-600">
+                            Logout
+                        </button>
                     </>
                 ) : (
                     <>

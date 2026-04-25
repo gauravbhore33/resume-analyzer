@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { uploadResume, analyzeResume, getJobRoles } from '../services/api';
@@ -21,6 +22,7 @@ function UploadPage() {
             const response = await getJobRoles();
             setJobRoles(response.data);
         } catch (err) {
+            toast.error('Failed to load job roles!');
             console.error('Failed to fetch job roles');
         }
     };
@@ -30,8 +32,10 @@ function UploadPage() {
         if (selectedFile && selectedFile.type === 'application/pdf') {
             setFile(selectedFile);
             setMessage('');
+            toast.success('Resume selected successfully! 📄');
         } else {
             setMessage('Please select a PDF file only!');
+            toast.error('Please select a PDF file only!');
         }
     };
 
@@ -42,18 +46,22 @@ function UploadPage() {
         if (droppedFile && droppedFile.type === 'application/pdf') {
             setFile(droppedFile);
             setMessage('');
+            toast.success('Resume dropped successfully! 📄');
         } else {
             setMessage('Please drop a PDF file only!');
+            toast.error('Please drop a PDF file only!');
         }
     };
 
     const handleAnalyze = async () => {
         if (!file) {
             setMessage('Please select a resume file!');
+            toast.error('Please select a resume file!');
             return;
         }
         if (!selectedJobRole) {
             setMessage('Please select a job role!');
+            toast.error('Please select a job role!');
             return;
         }
 
@@ -61,7 +69,15 @@ function UploadPage() {
         setStep('uploading');
 
         try {
-            const userId = localStorage.getItem('userId') || '1';
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                setMessage('Please login first!');
+                setStep('upload');
+                setLoading(false);
+                toast.error('Please login first!');
+                navigate('/login');
+                return;
+            }
             const formData = new FormData();
             formData.append('file', file);
             formData.append('userId', userId);
@@ -79,10 +95,32 @@ function UploadPage() {
             });
 
             const resultId = analysisResponse.data.id;
+            toast.success('Resume analyzed successfully! 🎯');
             navigate(`/results/${resultId}`);
 
         } catch (err) {
-            setMessage('Something went wrong. Please try again.');
+            if (err.response) {
+                if (err.response.status === 400) {
+                    setMessage('Invalid file or job role. Please try again!');
+                    toast.error('Invalid file or job role. Please try again!');
+                } else if (err.response.status === 401) {
+                    setMessage('Session expired! Please login again.');
+                    toast.error('Session expired! Please login again.');
+                    navigate('/login');
+                } else if (err.response.status === 500) {
+                    setMessage('Server error! Please try again in a moment.');
+                    toast.error('Server error! Please try again in a moment.');
+                } else {
+                    setMessage(`Error: ${err.response.data || 'Something went wrong!'}`);
+                    toast.error('Something went wrong!');
+                }
+            } else if (err.request) {
+                setMessage('Cannot connect to server! Make sure backend is running.');
+                toast.error('Cannot connect to server! Make sure backend is running.');
+            } else {
+                setMessage('Something went wrong. Please try again.');
+                toast.error('Something went wrong. Please try again.');
+            }
             setStep('upload');
         }
         setLoading(false);
@@ -159,7 +197,7 @@ function UploadPage() {
                         </select>
                     </div>
 
-                    {/* Error Message */}
+                    {/* Message */}
                     {message && (
                         <div className={`mt-4 px-4 py-3 rounded-lg text-sm ${
                             step === 'analyzing' || step === 'uploading'
