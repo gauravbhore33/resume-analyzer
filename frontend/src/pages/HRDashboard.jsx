@@ -11,6 +11,7 @@ function HRDashboard() {
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState('');
     const [completed, setCompleted] = useState(false);
+    const [sessionResultIds, setSessionResultIds] = useState([]);
 
     useEffect(() => {
         fetchJobRoles();
@@ -56,8 +57,10 @@ function HRDashboard() {
 
         setLoading(true);
         setCompleted(false);
+        setSessionResultIds([]);
         let successCount = 0;
         let failCount = 0;
+        const newResultIds = [];
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
@@ -71,10 +74,11 @@ function HRDashboard() {
                 const uploadResponse = await uploadResume(formData);
                 const resumeId = uploadResponse.data.id;
 
-                await analyzeResume({
+                const analysisResponse = await analyzeResume({
                     resumeId: resumeId,
                     jobRoleId: parseInt(selectedJobRole)
                 });
+                newResultIds.push(analysisResponse.data.id);
                 successCount++;
             } catch (err) {
                 failCount++;
@@ -87,6 +91,7 @@ function HRDashboard() {
         setCompleted(true);
         setProgress('');
         setFiles([]);
+        setSessionResultIds(newResultIds);
 
         if (successCount > 0 && failCount === 0) {
             toast.success(`Successfully analyzed all ${successCount} resumes! 🏆`);
@@ -96,6 +101,14 @@ function HRDashboard() {
         } else {
             toast.error('All resumes failed to analyze. Please try again!');
         }
+    };
+
+    const handleNewSession = () => {
+        setCompleted(false);
+        setSessionResultIds([]);
+        setSelectedJobRole('');
+        setFiles([]);
+        toast.success('New session started! 🔄');
     };
 
     return (
@@ -109,6 +122,25 @@ function HRDashboard() {
                     Upload multiple resumes and rank candidates by ATS score
                 </p>
 
+                {/* Session Info Banner */}
+                {completed && sessionResultIds.length > 0 && (
+                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center justify-between">
+                        <div>
+                            <p className="text-green-700 font-medium">
+                                ✅ Session Complete — {sessionResultIds.length} resumes analyzed
+                            </p>
+                            <p className="text-green-600 text-sm mt-1">
+                                Leaderboard shows only this session's candidates
+                            </p>
+                        </div>
+                        <button
+                            onClick={handleNewSession}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">
+                            🔄 New Session
+                        </button>
+                    </div>
+                )}
+
                 <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
 
                     {/* Job Role Selector */}
@@ -119,7 +151,8 @@ function HRDashboard() {
                         <select
                             value={selectedJobRole}
                             onChange={(e) => setSelectedJobRole(e.target.value)}
-                            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            disabled={loading}
+                            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50">
                             <option value="">-- Select a Job Role --</option>
                             {jobRoles.map(role => (
                                 <option key={role.id} value={role.id}>
@@ -139,7 +172,8 @@ function HRDashboard() {
                             accept=".pdf"
                             multiple
                             onChange={handleFilesChange}
-                            className="w-full border border-gray-300 rounded-lg px-4 py-3"
+                            disabled={loading}
+                            className="w-full border border-gray-300 rounded-lg px-4 py-3 disabled:opacity-50"
                         />
 
                         {/* File Count Badge */}
@@ -193,28 +227,25 @@ function HRDashboard() {
                         </div>
                     )}
 
-                    {/* Success */}
-                    {completed && (
-                        <div className="bg-green-50 text-green-600 px-4 py-3 rounded-lg mb-4 text-sm">
-                            ✅ All resumes analyzed successfully!
-                        </div>
-                    )}
-
                     {/* Analyze Button */}
                     <button
                         onClick={handleBatchAnalyze}
-                        disabled={loading}
+                        disabled={loading || files.length === 0}
                         className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 disabled:opacity-50">
-                        {loading ? `Analyzing ${files.length} resumes...` : `🚀 Analyze All Resumes (${files.length})`}
+                        {loading
+                            ? `Analyzing ${files.length} resumes...`
+                            : `🚀 Analyze All Resumes (${files.length})`}
                     </button>
                 </div>
 
-                {/* View Leaderboard Button */}
-                {selectedJobRole && (
+                {/* View Leaderboard Button - Only shows after analysis */}
+                {completed && sessionResultIds.length > 0 && (
                     <button
-                        onClick={() => navigate(`/hr/leaderboard/${selectedJobRole}`)}
+                        onClick={() => navigate(`/hr/leaderboard/${selectedJobRole}`, {
+                            state: { sessionResultIds }
+                        })}
                         className="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-700">
-                        🏆 View Candidate Leaderboard
+                        🏆 View Session Leaderboard ({sessionResultIds.length} candidates)
                     </button>
                 )}
 

@@ -46,7 +46,7 @@ Query 2 — Check Users
 sqlSELECT id, name, email, role FROM users;
 
 Query 3 — Check Resumes
-sqlSELECT id, user_id, file_path, uploaded_at FROM resumes;
+SELECT id, user_id, file_path, uploaded_at FROM resumes;
 
 Query 4 — Check Job Roles
 sqlSELECT id, title, required_skills FROM job_roles;
