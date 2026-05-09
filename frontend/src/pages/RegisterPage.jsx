@@ -24,7 +24,7 @@ function RegisterPage() {
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('userId', response.data.userId);
-                localStorage.setItem('role', response.data.role);
+                localStorage.setItem('role', response.data.role || 'USER');
                 toast.success('Account created successfully! 🎉');
                 navigate('/upload');
             } else {
