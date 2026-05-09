@@ -40,6 +40,7 @@ public class AuthService {
 
         String token = jwtUtil.generateToken(email);
         response.put("token", token);
+        response.put("userId", userRepository.findByEmail(email).get().getId().toString());
         response.put("message", "User registered successfully!");
         return response;
     }
