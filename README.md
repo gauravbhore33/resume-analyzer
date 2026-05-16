@@ -317,15 +317,15 @@ Connect your GitHub repository to Vercel and set the root directory to `frontend
 
 ## Screenshots
 
-> Add screenshots of your application here
+
 
 | Landing Page | Upload Page |
 |---|---|
-| [screenshot] | [screenshot] |
+| [c:\Users\Gaurav\Pictures\Screenshots\Screenshot 2026-05-09 151533.png] | [c:\Users\Gaurav\Pictures\Screenshots\Screenshot 2026-05-09 151858.png] |
 
-| Results Page | HR Leaderboard |
+| Results Page | HR Dashboard |
 |---|---|
-| [screenshot] | [screenshot] |
+| [c:\Users\Gaurav\Pictures\Screenshots\Screenshot 2026-05-09 151939.png] | [c:\Users\Gaurav\Pictures\Screenshots\Screenshot 2026-04-15 203652.png] |
 
 ---
 
